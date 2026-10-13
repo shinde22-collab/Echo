@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a0e0d">
+  <meta name="description" content="An interactive observatory for black-box model extraction. Explore real experiments, decision boundaries, and query-efficient learning.">
+  <title>ECHO — Inside the Black Box</title>
+  <link rel="icon" type="image/svg+xml" href="assets/echo.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#observatory">Skip to experiment</a>
+  <header class="masthead wrap">
+    <a class="wordmark" href="#" aria-label="ECHO home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 6h20M6 16h15M6 26h20"/></svg>ECHO<span class="mark-dot">/01</span></a>
+    <nav aria-label="Main navigation"><a href="#observatory">Observatory</a><a href="#protocol">The protocol</a><a href="https://github.com/shinde22-collab/Echo" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a></nav>
+    <span class="header-status"><i></i> RESEARCH BUILD / 01</span>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-heading">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="mini-cross">+</span> BLACK-BOX MODEL EXTRACTION</p>
+        <h1 id="hero-heading">You can hide<br>the model.<br><span>Not the echo.</span></h1>
+        <p class="hero-description">No weights. No source code. Just predictions.<br>Watch a second model learn to think like the first.</p>
+        <div class="hero-actions"><a class="button primary" href="#observatory">Enter the observatory <span>↗</span></a><a class="text-link" href="#protocol">How it works <span>↓</span></a></div>
+        <p class="hero-footnote"><span>01 /</span> A controlled experiment in machine learning security</p>
+      </div>
+      <div class="signal-stage">
+        <div class="stage-top"><span><i class="status-dot"></i> BEHAVIORAL SIGNATURE</span><button id="motion" class="icon-button" aria-label="Pause motion" title="Pause motion">Ⅱ</button></div>
+        <canvas id="signal" tabindex="0" role="img" aria-label="Interactive rotating point cloud of held-out banknote samples. Drag or use arrow keys to rotate."></canvas>
+        <div class="stage-center" aria-hidden="true"><span class="orbit-label">f(x)</span><span class="orbit-line"></span><span class="orbit-label lime">f̂(x)</span></div>
+        <div class="signal-caption"><div><span class="tiny-label">OBSERVED RESPONSE</span><strong>Different models.<br>One signature.</strong></div><span class="stage-coordinate">DRAG TO ROTATE<br>270 TEST SAMPLES ↗</span></div>
+      </div>
+    </section>
+    <div class="ticker" aria-hidden="true"><div class="wrap ticker-content"><span>PREDICTION ACCESS ONLY</span><b>×</b><span>LIMITED QUERY BUDGET</span><b>×</b><span>MEASURED FIDELITY</span><b>×</b><span>ZERO ORIGINAL LABELS</span><b>×</b></div></div>
+    <section class="wrap observatory" id="observatory" aria-labelledby="observatory-heading">
+      <div class="section-head"><div><p class="eyebrow">01 / THE OBSERVATORY</p><h2 id="observatory-heading">A little access.<br>A lot of understanding.</h2></div><p>Choose a strategy. Set the query budget.<br>Find out how much of the black box survives.</p></div>
+      <div id="loading" class="loading" role="status">Loading measured experiment data…</div>
+      <div id="lab" hidden>
+        <div class="control-strip">
+          <div class="strategy-control"><span class="tiny-label">QUERY STRATEGY</span><div class="segmented" role="group" aria-label="Query strategy"><button data-strategy="random" aria-pressed="false">Random</button><button data-strategy="coverage" aria-pressed="false">Coverage</button><button data-strategy="uncertainty" aria-pressed="true">Uncertainty <span>↗</span></button></div></div>
+          <label class="seed-control"><span class="tiny-label">ACQUISITION SEED</span><select id="seed"><option>7</option><option>19</option><option selected>42</option><option>73</option><option>101</option></select></label>
+          <button class="button replay" id="replay"><span aria-hidden="true">▷</span> Replay extraction</button>
+        </div>
+        <div class="budget-control"><div><span class="tiny-label">ORACLE QUERIES</span><strong id="budget-value">100<span> / 500</span></strong></div><div class="budget-track"><label class="sr-only" for="budget">Query budget checkpoint</label><input type="range" id="budget" min="0" max="5" step="1" value="2"><div class="budget-ticks" id="budget-ticks"></div></div><div class="budget-note"><span id="pool-percent">17.3%</span><span>OF THE QUERY POOL</span></div></div>
+        <div class="metrics" aria-live="polite"><article class="metric main-metric"><p>Prediction fidelity <span title="Agreement with the hidden model on the held-out test set">↗</span></p><strong id="fidelity">—</strong><span>agreement with the black box</span></article><article class="metric"><p>Surrogate accuracy</p><strong id="accuracy">—</strong><span>against true test labels</span></article><article class="metric"><p>Decisions that differ</p><strong id="disagreements">—</strong><span id="test-count">out of 270 held-out samples</span></article><article class="metric"><p>Original labels used</p><strong class="outline-number">0</strong><span>the surrogate only gets predictions</span></article></div>
+        <p id="strategy-note" class="strategy-note"></p>
+        <div class="chart-grid">
+          <article class="panel fidelity-panel"><div class="panel-head"><div><span class="tiny-label">THE LEARNING CURVE</span><h3>How fast does an echo form?</h3></div><span class="panel-index">FIG. 01</span></div><div class="legend"><span><i class="dot lime-bg"></i> Selected run</span><span><i class="line-swatch"></i> Five-seed mean</span><span class="muted">Band = ±1 SD</span></div><div id="curve" class="curve" role="img" aria-label="Fidelity versus query budget"></div><p class="chart-caption" id="curve-caption"></p></article>
+          <article class="panel map-panel"><div class="panel-head"><div><span class="tiny-label">THE DECISION LANDSCAPE</span><h3>Two minds. One boundary?</h3></div><span class="panel-index">FIG. 02</span></div><div class="map-controls"><div class="segmented small" role="group" aria-label="Decision map view"><button data-map="surrogate" aria-pressed="true">Surrogate</button><button data-map="victim" aria-pressed="false">Black box</button><button data-map="difference" aria-pressed="false">Difference</button></div><span class="map-axis">SKEWNESS ↑</span></div><div class="map-wrap"><canvas id="landscape" role="img" aria-label="Two-dimensional decision slice through variance and skewness"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div></div><div class="map-footer"><span><i class="dot blue-bg"></i> Class 0 <i class="dot lime-bg"></i> Class 1 <i class="dot coral-bg"></i> Disagreement</span><span>VARIANCE →</span></div><p class="chart-caption">A 2D slice; kurtosis and entropy held at pool medians. Dots mark queried inputs projected onto this plane.</p></article>
+        </div>
+        <div class="replay-log" aria-live="polite"><span class="terminal-mark">↳</span><span id="log">Checkpoint loaded. These are recorded Python runs; replay animates the saved checkpoints.</span><span class="log-tag">REAL DATA</span></div>
+        <article class="probe panel"><div class="probe-intro"><span class="tiny-label">LOOK CLOSER</span><h3>One banknote.<br>Two decisions.</h3><p>Inspect a held-out sample. The surrogate prediction is computed in your browser from its fitted support vectors.</p><div class="probe-buttons"><button class="button secondary" id="next-sample">Next sample <span>→</span></button><button class="text-button" id="find-difference">Find a disagreement ↗</button></div></div><div class="sample-card"><div class="sample-heading"><span class="tiny-label">HELD-OUT SAMPLE</span><span id="sample-id">#000</span></div><div id="sample-features"></div><label class="sample-selector"><span>Browse test samples</span><input type="range" id="sample" min="0" max="269" value="0"></label></div><div class="probe-result"><div><span class="tiny-label">BLACK BOX / RECORDED</span><strong id="victim-class">—</strong></div><div><span class="tiny-label">SURROGATE / LIVE INFERENCE</span><strong id="surrogate-class">—</strong></div><div class="agreement-badge" id="agreement-badge">—</div></div></article>
+        <div class="export-row"><p>Every number has a paper trail.</p><a href="assets/metrics.csv" download>Download results .csv <span>↓</span></a><a href="assets/experiment.json" download>Full experiment .json <span>↓</span></a></div>
+      </div>
+    </section>
+    <section id="protocol" class="protocol"><div class="wrap"><div class="section-head"><div><p class="eyebrow">02 / UNDER THE SURFACE</p><h2>No magic.<br>Just the right questions.</h2></div><p>Learning a model’s behavior doesn’t require<br>knowing how it was built.</p></div><div class="steps"><article><span class="step-number">01</span><h3>Seal the original.</h3><p>A Random Forest learns from 500 banknotes. The extraction code sees only a callable that returns class predictions. Every queried row counts against the budget.</p><span class="step-tag">THE BLACK BOX</span></article><article><span class="step-number">02</span><h3>Listen to its answers.</h3><p>Choose inputs from a separate, unlabeled pool. Random sampling explores by chance. Coverage spreads queries out. Uncertainty targets the surrogate’s current boundary.</p><span class="step-tag">THE QUERY LOOP</span></article><article><span class="step-number">03</span><h3>Measure the echo.</h3><p>An RBF support vector machine learns from the returned labels. Fidelity measures agreement with the original on 270 untouched test examples.</p><span class="step-tag">THE SURROGATE</span></article></div><div class="methodology"><details open><summary>The experiment, precisely <span>+</span></summary><div><p>UCI Banknote Authentication: 1,372 rows, four wavelet features. Remove 24 identical feature rows before a stratified split: 500 victim-training rows, 578 query-pool rows, 270 test rows. Split and victim seed: 42. Acquisition seeds: 7, 19, 42, 73, 101. Budgets: 25, 50, 100, 150, 250, 500.</p><p>Fit feature scaling on unlabeled pool inputs only. Use a 160-tree Random Forest as the victim and an RBF SVC with C=10 and gamma=scale as the surrogate. Acquire at most 25 rows per batch. Each strategy follows a nested sequence, so 500 queries covers all six checkpoints in one run. The test set never guides acquisition or model selection.</p></div></details><details><summary>What the numbers mean <span>+</span></summary><div><p>Fidelity is agreement with the hidden model; accuracy is agreement with dataset labels. They answer different questions. The curve’s band shows one sample standard deviation over acquisition seeds, with the victim and data split fixed. It is not a confidence interval and does not measure variation across datasets or victim models.</p><p>The hosted observatory replays precomputed experiments and runs surrogate inference locally. The optional Python API serves live, budgeted victim queries. The visual decision map is a two-dimensional slice, not a full four-dimensional fidelity estimate. More queries do not guarantee a monotonic improvement.</p></div></details><details><summary>Why this matters <span>+</span></summary><div><p>Prediction-only access can reveal a surprising amount about a model’s behavior. This controlled study illustrates model extraction, surrogate learning, and an ML security risk on a small public dataset. Agreement here does not imply recovery of architecture, weights, or training data, and does not predict performance against production systems.</p><p>Research context: <a href="https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/tramer" target="_blank" rel="noopener">Tramèr et al., Stealing Machine Learning Models via Prediction APIs (USENIX Security 2016) ↗</a>.</p></div></details></div><div class="protocol-bottom"><p>Built to be inspected.<br><span>Designed to be reproduced.</span></p><a class="button primary" href="https://github.com/shinde22-collab/Echo" target="_blank" rel="noopener">Explore the source <span>↗</span></a></div></div></section>
+  </main>
+  <footer class="wrap"><a class="wordmark" href="#">ECHO<span class="mark-dot">/01</span></a><p>QUERY. OBSERVE. REPLICATE.</p><a href="https://archive.ics.uci.edu/dataset/267/banknote+authentication" target="_blank" rel="noopener">Data: Volker Lohweg / UCI · CC BY 4.0 ↗</a></footer>
+  <noscript><p class="wrap">JavaScript is required for the interactive observatory. The <a href="assets/metrics.csv">measured results CSV</a> is available without it.</p></noscript>
+</body>
+</html>
+
